@@ -1,10 +1,10 @@
 id: rfhs_lrs_source
-label: lrs_source
+label: LRS Source
 category: '[rfhs]'
 
 templates:
   imports: from gnuradio import rfhs
-  make: rfhs.lrs_source(${systemid}, ${pagerid}, ${function}, ${printkey}, ${random}, ${verbose})
+  make: rfhs.lrs_source(${systemid}, ${pagerid}, ${function}, ${printkey}, ${randomkey}, ${verbose})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
@@ -28,11 +28,21 @@ parameters:
 - id: printkey
   label: Print Key
   dtype: bool
-  default: False
-- id: random
+  options: [true, false]
+  option_labels: ["True", "False"]
+  default: false
+- id: randomkey
   label: Random
   dtype: bool
-  default: False
+  options: [true, false]
+  option_labels: ["True", "False"]
+  default: false
+- id: verbose
+  label: Verbose
+  dtype: bool
+  options: [true, false]
+  option_labels: ["True", "False"]
+  default: false
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:
@@ -43,7 +53,7 @@ parameters:
 #      * optional (optional - set to 1 for optional inputs. Default is 0)
 
 outputs:
-- label: data
+- label: out
   dtype: float
   domain: stream
 

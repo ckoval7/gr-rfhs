@@ -25,16 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 import re
-# import struct
-import argparse
 import random
 
 # GR Block Stuff
 import numpy as np
 from gnuradio import gr
 
-class blk(gr.sync_block):
-    def __init__(self, systemid=1, pagerid=1, function=1, printkey=False, random=False, verbose=False):
+class lrs_source(gr.sync_block):
+    def __init__(self, systemid=1, pagerid=1, function=1, printkey=False, randomkey=False, verbose=False):
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
@@ -48,12 +46,13 @@ class blk(gr.sync_block):
         self.pagerid = pagerid
         self.function = function
         self.printkey = printkey
-        self.random = random
+        self.randomkey = randomkey
         self.verbose = verbose
         self.pager_data = np.array(main(systemid= self.systemid,
                                pagerid= self.pagerid,
                                function= self.function,
-                               printkey= self.printkey
+                               printkey= self.printkey,
+                               randomkey= self.randomkey
                                ), dtype=np.float32)
 
         # Initialize an index to track position
@@ -64,14 +63,14 @@ class blk(gr.sync_block):
         n_output_items = len(out) # The space available (e.g., 8192)
         if self.idx >= len(self.pager_data):
             return -1
-        
+
         # Calculate how much data we have left to send in this cycle
         data_len = len(self.pager_data)
         num_to_send = min(n_output_items, data_len - self.idx)
-        
+
         # Write the chunk to the output buffer
         out[:num_to_send] = self.pager_data[self.idx : self.idx + num_to_send]
-        
+
         # Update the index
         self.idx += num_to_send
         # output_items[0][:len(self.pager_data)] = self.pager_data
@@ -81,7 +80,7 @@ class blk(gr.sync_block):
 def encode_manchester( bin_list, verbose ):
 
       pre = []  # create extra preambles to wake up the pager
-      for x in range(0,50): 
+      for x in range(0,50):
             pre.append('1')
             pre.append('0')
 
@@ -141,18 +140,16 @@ def calculate_crc( pre, sink_word, rest_id, station_id, pager_n, alert_type, pri
 #     #68 beep 3 times
 
 
-def main(systemid=1, pagerid=1, function=1, printkey=True, random=False, verbose=False):
+def main(systemid=1, pagerid=1, function=1, printkey=True, randomkey=False, verbose=False):
     ##########################################
     # main program start                     #
     ##########################################
-    
+
     if(verbose):
         print("System ID: 0x{:02x}".format(systemid))
         print("Pager ID: 0x{:02x}".format(pagerid))
         print("Page Function: 0x{:02x}".format(function))
         # print("Output file: {}".format(outputfile))
-
-    randomkey = random
 
     if(randomkey):
         rest_id = random.randint(0,255)
@@ -173,11 +170,8 @@ def main(systemid=1, pagerid=1, function=1, printkey=True, random=False, verbose
         alert_type = function
 
     # outputfile = outputfile
-    if(random):
+    if(randomkey):
         printkey = True
-    else:
-        printkey = printkey
-    verbose = verbose
 
     if(printkey):
         print('SDR Simple Challenge Runner line:')

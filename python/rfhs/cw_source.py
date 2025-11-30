@@ -62,12 +62,12 @@ class cw_source(gr.sync_block):
     """
     docstring for block cw_source
     """
-    def __init__(self, text="RFHS", wpm=35, samp_rate=48000):
+    def __init__(self, text="RFHS", wpm=15, samp_rate=48000):
         gr.sync_block.__init__(self,
             name="Morse Code Source",
             in_sig=None,
             out_sig=[np.float32])
-        
+
         self.wpm = wpm
         self.text = text
         self.samp_rate = samp_rate
@@ -83,14 +83,14 @@ class cw_source(gr.sync_block):
         n_output_items = len(out) # The space available (e.g., 8192)
         if self.idx >= len(self.output_data):
             return -1
-        
+
         # Calculate how much data we have left to send in this cycle
         data_len = len(self.output_data)
         num_to_send = min(n_output_items, data_len - self.idx)
-        
+
         # Write the chunk to the output buffer
         out[:num_to_send] = self.output_data[self.idx : self.idx + num_to_send]
-        
+
         # Update the index
         self.idx += num_to_send
         # output_items[0][:len(self.pager_data)] = self.pager_data
@@ -112,7 +112,7 @@ def calculate_dit_sample_repetitions(sample_rate_sps: float, desired_wpm: float)
 
     Returns:
         int: The repetition factor (number of samples) required for one dit.
-    
+
     Raises:
         ValueError: If sample_rate_sps or desired_wpm is not positive.
     """
@@ -123,13 +123,13 @@ def calculate_dit_sample_repetitions(sample_rate_sps: float, desired_wpm: float)
     # The standard formula (Paris Standard) defines 1 WPM as 50 unit elements
     # per minute, corresponding to a dit duration of 1.2 seconds per WPM.
     # t_dit = 60 seconds / (50 units/word * WPM) = 1.2 / WPM
-    
+
     T_DIT_SECONDS = 1.2 / desired_wpm
 
     # 2. Calculate Samples per Dit (Repetition Factor)
     # The number of samples required is the duration multiplied by the rate.
     # Repetitions = T_DIT_SECONDS * Sample Rate (SPS)
-    
+
     repetitions_float = T_DIT_SECONDS * sample_rate_sps
 
     # 3. Return as an integer (rounded for best accuracy)

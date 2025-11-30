@@ -1,5 +1,5 @@
 id: rfhs_cw_source
-label: cw_source
+label: Morse Code Source
 category: '[rfhs]'
 
 templates:
@@ -37,7 +37,7 @@ parameters:
 #      * optional (optional - set to 1 for optional inputs. Default is 0)
 
 outputs:
-- label: cw
+- label: out
   domain: stream
   dtype: float
 

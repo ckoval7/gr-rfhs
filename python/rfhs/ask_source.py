@@ -15,12 +15,12 @@ class ask_source(gr.sync_block):
     """
     docstring for block cw_source
     """
-    def __init__(self, text="RFHS", samp_rate=48000, baud_rate=3300, repeat=10):
+    def __init__(self, text="RFHS", samp_rate=48000, baud_rate=3211, repeat=10):
         gr.sync_block.__init__(self,
             name="ASK Source",
             in_sig=None,
             out_sig=[np.float32])
-        
+
         self.text = text
         self.samp_rate = samp_rate
         self.baud_rate = baud_rate
@@ -37,14 +37,14 @@ class ask_source(gr.sync_block):
         n_output_items = len(out) # The space available (e.g., 8192)
         if self.idx >= len(self.output_data):
             return -1
-        
+
         # Calculate how much data we have left to send in this cycle
         data_len = len(self.output_data)
         num_to_send = min(n_output_items, data_len - self.idx)
-        
+
         # Write the chunk to the output buffer
         out[:num_to_send] = self.output_data[self.idx : self.idx + num_to_send]
-        
+
         # Update the index
         self.idx += num_to_send
         # output_items[0][:len(self.pager_data)] = self.pager_data

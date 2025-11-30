@@ -1,10 +1,10 @@
 id: rfhs_ask_source
-label: ask_source
+label: ASK Data Source
 category: '[rfhs]'
 
 templates:
   imports: from gnuradio import rfhs
-  make: rfhs.ask_source(${text}, ${sps}, ${baud_rate})
+  make: rfhs.ask_source(${text}, ${samp_rate}, ${baud_rate})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
@@ -26,7 +26,7 @@ parameters:
 - id: baud_rate
   label: Sample Rate
   dtype: int
-  default: 3300
+  default: 3211
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:
@@ -37,7 +37,7 @@ parameters:
 #      * optional (optional - set to 1 for optional inputs. Default is 0)
 
 outputs:
-- label: ask
+- label: out
   domain: stream
   dtype: float
 
