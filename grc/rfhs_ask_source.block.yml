@@ -24,9 +24,14 @@ parameters:
   default: samp_rate
 
 - id: baud_rate
-  label: Sample Rate
+  label: Baud Rate
   dtype: int
   default: 3211
+
+- id: repeat
+  label: Repeat
+  dtype: int
+  default: 10
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:
